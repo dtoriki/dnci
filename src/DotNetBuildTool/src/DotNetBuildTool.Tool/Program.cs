@@ -43,6 +43,7 @@ namespace DotNetBuildTool.Tool
             bool verbose,
             // our options here
             string target,
+            bool info = true,
             string configuration = "Debug"
             )
         {
@@ -65,6 +66,11 @@ namespace DotNetBuildTool.Tool
 
             string dotnet = TryFindDotNetExePath()
                 ?? throw new FileNotFoundException("'dotnet' command isn't found. Try to set DOTNET_ROOT variable.");
+
+            if (info)
+            {
+                Console.WriteLine(".Net Build Tool");
+            }
 
             Target(
                 "restore-tools",
