@@ -1,0 +1,10 @@
+FileOrFolder src/ToolMaster
+Clear 0
+DryRun 0
+Host GitHubActions
+Parallel 0
+SkipDependencies 0
+Verbose 1
+ErrorIfTargetsNotExists 0
+PrintInfo 0
+Configuration Release
