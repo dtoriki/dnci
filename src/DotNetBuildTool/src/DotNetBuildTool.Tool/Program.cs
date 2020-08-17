@@ -65,83 +65,95 @@ namespace DotNetBuildTool.Tool
             string dotnet = TryFindDotNetExePath()
                 ?? throw new FileNotFoundException("'dotnet' command isn't found. Try to set DOTNET_ROOT variable.");
 
-            Target("restore-tools", async () => {
-                BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"tool restore --ignore-failed-sources").ToConsole()
-                    .ExecuteBufferedAsync().Task.ConfigureAwait(false);
-            });
-
-            Target("restore", async () => {
-                bool isPublicRelease = bool.Parse(Environment.GetEnvironmentVariable("NBGV_PublicRelease") ?? "false");
-                BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"msbuild -noLogo " +
-                    "-t:Restore " +
-                    "-p:RestoreForce=true " +
-                    "-p:RestoreIgnoreFailedSources=True " +
-                    $"-p:Configuration={configuration} " +
-                    // for Nerdbank.GitVersioning
-                    $"-p:PublicRelease={isPublicRelease} "
-                    ).ToConsole()
-                    .ExecuteBufferedAsync().Task.ConfigureAwait(false);
-            });
-
-            Target("build", async () => {
-                BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"build -noLogo -c {configuration}")
-                    .ToConsole()
-                    .ExecuteBufferedAsync().Task.ConfigureAwait(false);
-            });
-
-            Target("unit_test", async () => {
-                string resultsDirectory = Path.GetFullPath(Path.Combine("artifacts", "tests", "unit", "output"));
-                if (!Directory.Exists(resultsDirectory))
-                    Directory.CreateDirectory(resultsDirectory);
-                BufferedCommandResult cmd = await Cli.Wrap(dotnet)
-                    .WithArguments($"test " +
-                    "--filter FullyQualifiedName~Unit " +
-                    "--nologo " +
-                    "--no-restore " +
-                    $"--collect:\"XPlat Code Coverage\" --results-directory {resultsDirectory} " +
-                    $"--logger trx;LogFileName=\"{Path.Combine(resultsDirectory, "tests.trx").Replace("\"", "\\\"")}\" " +
-                    $"-c {configuration} " +
-                    "-- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=json,cobertura"
-                    )
-                    .ToConsole()
-                    .ExecuteBufferedAsync().Task.ConfigureAwait(false);
-
-                MoveAttachmentsToResultsDirectory(resultsDirectory, cmd.StandardOutput);
-                TryRemoveTestsOutputDirectories(resultsDirectory);
-
-                // Removes all files in inner folders, workaround of https://github.com/microsoft/vstest/issues/2334
-                static void TryRemoveTestsOutputDirectories(string resultsDirectory)
+            Target(
+                "restore-tools",
+                async () =>
                 {
-                    foreach (string directory in Directory.EnumerateDirectories(resultsDirectory))
-                    {
-                        try
-                        {
-                            Directory.Delete(directory, recursive: true);
-                        }
-                        catch { }
-                    }
-                }
+                    BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"tool restore --ignore-failed-sources").ToConsole()
+                        .ExecuteBufferedAsync().Task.ConfigureAwait(false);
+                });
 
-                // Removes guid from tests output path, workaround of https://github.com/microsoft/vstest/issues/2378
-                static void MoveAttachmentsToResultsDirectory(string resultsDirectory, string output)
+            Target(
+                "restore",
+                async () =>
                 {
-                    Regex attachmentsRegex = new Regex($@"Attachments:(?<filepaths>(?<filepath>[\s]+[^\n]+{Regex.Escape(resultsDirectory)}[^\n]+[\n])+)", RegexOptions.Singleline | RegexOptions.CultureInvariant);
-                    Match match = attachmentsRegex.Match(output);
-                    if (match.Success)
+                    bool isPublicRelease = bool.Parse(Environment.GetEnvironmentVariable("NBGV_PublicRelease") ?? "false");
+                    BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"msbuild -noLogo " +
+                        "-t:Restore " +
+                        "-p:RestoreForce=true " +
+                        "-p:RestoreIgnoreFailedSources=True " +
+                        $"-p:Configuration={configuration} " +
+                        // for Nerdbank.GitVersioning
+                        $"-p:PublicRelease={isPublicRelease} "
+                        ).ToConsole()
+                        .ExecuteBufferedAsync().Task.ConfigureAwait(false);
+                });
+
+            Target(
+                "build",
+                async () =>
+                {
+                    BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"build -noLogo -c {configuration}")
+                        .ToConsole()
+                        .ExecuteBufferedAsync().Task.ConfigureAwait(false);
+                });
+
+            Target(
+                "unit_test",
+                async () =>
+                {
+                    string resultsDirectory = Path.GetFullPath(Path.Combine("artifacts", "tests", "unit", "output"));
+                    if (!Directory.Exists(resultsDirectory))
+                        Directory.CreateDirectory(resultsDirectory);
+                    BufferedCommandResult cmd = await Cli.Wrap(dotnet)
+                        .WithArguments($"test " +
+                        "--filter FullyQualifiedName~Unit " +
+                        "--nologo " +
+                        "--no-restore " +
+                        $"--collect:\"XPlat Code Coverage\" --results-directory {resultsDirectory} " +
+                        $"--logger trx;LogFileName=\"{Path.Combine(resultsDirectory, "tests.trx").Replace("\"", "\\\"")}\" " +
+                        $"-c {configuration} " +
+                        "-- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=json,cobertura"
+                        )
+                        .ToConsole()
+                        .ExecuteBufferedAsync().Task.ConfigureAwait(false);
+
+                    MoveAttachmentsToResultsDirectory(resultsDirectory, cmd.StandardOutput);
+                    TryRemoveTestsOutputDirectories(resultsDirectory);
+
+                    // Removes all files in inner folders, workaround of https://github.com/microsoft/vstest/issues/2334
+                    static void TryRemoveTestsOutputDirectories(string resultsDirectory)
                     {
-                        string regexPaths = match.Groups["filepaths"].Value.Trim('\n', ' ', '\t', '\r');
-                        string[] paths = regexPaths.Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-                        if (paths.Length > 0)
+                        foreach (string directory in Directory.EnumerateDirectories(resultsDirectory))
                         {
-                            foreach (string path in paths)
+                            try
                             {
-                                File.Move(path, Path.Combine(resultsDirectory, Path.GetFileName(path)), overwrite: true);
+                                Directory.Delete(directory, recursive: true);
                             }
-                            Directory.Delete(Path.GetDirectoryName(paths[0]), true);
+                            catch { }
                         }
                     }
-                }
-            });
+
+                    // Removes guid from tests output path, workaround of https://github.com/microsoft/vstest/issues/2378
+                    static void MoveAttachmentsToResultsDirectory(string resultsDirectory, string output)
+                    {
+                        Regex attachmentsRegex = new Regex($@"Attachments:(?<filepaths>(?<filepath>[\s]+[^\n]+{Regex.Escape(resultsDirectory)}[^\n]+[\n])+)", RegexOptions.Singleline | RegexOptions.CultureInvariant);
+                        Match match = attachmentsRegex.Match(output);
+                        if (match.Success)
+                        {
+                            string regexPaths = match.Groups["filepaths"].Value.Trim('\n', ' ', '\t', '\r');
+                            string[] paths = regexPaths.Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+                            if (paths.Length > 0)
+                            {
+                                foreach (string path in paths)
+                                {
+                                    File.Move(path, Path.Combine(resultsDirectory, Path.GetFileName(path)), overwrite: true);
+                                }
+                                Directory.Delete(Path.GetDirectoryName(paths[0]), true);
+                            }
+                        }
+                    }
+                });
 
             Target("default", DependsOn("build"));
 
