@@ -71,7 +71,7 @@ namespace DotNetBuildTool.Tool
             {
                 Console.WriteLine(".Net Build Tool");
             }
-            if (arguments.Count() == 0)
+            if ((arguments?.Count() ?? 0 ) == 0)
             {
                 Console.WriteLine("Can't find any targets for msbuild.");
                 return;
