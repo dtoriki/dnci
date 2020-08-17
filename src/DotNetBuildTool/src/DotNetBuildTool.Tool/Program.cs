@@ -42,6 +42,7 @@ namespace DotNetBuildTool.Tool
             bool skipDependencies,
             bool verbose,
             // our options here
+            string target,
             string configuration = "Debug"
             )
         {
@@ -78,7 +79,8 @@ namespace DotNetBuildTool.Tool
                 async () =>
                 {
                     bool isPublicRelease = bool.Parse(Environment.GetEnvironmentVariable("NBGV_PublicRelease") ?? "false");
-                    BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"msbuild -noLogo " +
+                    BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"msbuild {target} -noLogo " +
+                        $"{target} " +
                         "-t:Restore " +
                         "-p:RestoreForce=true " +
                         "-p:RestoreIgnoreFailedSources=True " +
@@ -93,7 +95,7 @@ namespace DotNetBuildTool.Tool
                 "build",
                 async () =>
                 {
-                    BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"build -noLogo -c {configuration}")
+                    BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"build {target} -noLogo -c {configuration}")
                         .ToConsole()
                         .ExecuteBufferedAsync().Task.ConfigureAwait(false);
                 });
