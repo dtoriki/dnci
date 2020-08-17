@@ -9,7 +9,7 @@
     <DependencyVersion>Highest</DependencyVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Bullseye"  />
+    <PackageReference Include="Bullseye" />
     <PackageReference Include="CliWrap" />
     <PackageReference Include="System.CommandLine.DragonFruit" />
   </ItemGroup>
@@ -18,6 +18,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Directory.Build.props" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetBuildTool.Config\DotNetBuildTool.Config.csproj" />
+    <ProjectReference Include="..\DotNetBuildTool.Engine\DotNetBuildTool.Engine.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Nerdbank.GitVersioning">
