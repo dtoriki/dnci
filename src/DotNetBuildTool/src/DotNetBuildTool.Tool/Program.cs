@@ -66,11 +66,6 @@ namespace DotNetBuildTool.Tool
             string dotnet = TryFindDotNetExePath()
                 ?? throw new FileNotFoundException("'dotnet' command isn't found. Try to set DOTNET_ROOT variable.");
 
-            if (arguments.Contains("info"))
-            {
-                Console.WriteLine(".Net Build Tool");
-            }
-
             Target(
                 "restore-tools",
                 async () =>
