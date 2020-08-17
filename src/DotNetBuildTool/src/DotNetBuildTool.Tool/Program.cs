@@ -42,6 +42,7 @@ namespace DotNetBuildTool.Tool
             bool skipDependencies,
             bool verbose,
             // our options here
+            string target,
             string configuration = "Debug"
             )
         {
@@ -79,6 +80,7 @@ namespace DotNetBuildTool.Tool
                 {
                     bool isPublicRelease = bool.Parse(Environment.GetEnvironmentVariable("NBGV_PublicRelease") ?? "false");
                     BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"msbuild -noLogo " +
+                        $"{target} " +
                         "-t:Restore " +
                         "-p:RestoreForce=true " +
                         "-p:RestoreIgnoreFailedSources=True " +
