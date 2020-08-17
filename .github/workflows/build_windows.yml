@@ -25,6 +25,6 @@ jobs:
         with:
           dotnet-version: 3.1.301
       - name: Restore & Restore tools
-        run: dotnet run --project src/DotNetBuildTool/src/DotNetBuildTool.Tool/ --configuration Release --no-launch-profile -- --configuration Debug restore
+        run: dotnet run --project src/DotNetBuildTool/src/DotNetBuildTool.Tool/ --configuration Release --no-launch-profile -- --target src/DotNetBuildTool --configuration Debug restore
       - name: Build check
-        run: dotnet run --project src/DotNetBuildTool/src/DotNetBuildTool.Tool/ --configuration Release --no-launch-profile -- --configuration Debug build
+        run: dotnet run --project src/DotNetBuildTool/src/DotNetBuildTool.Tool/ --configuration Release --no-launch-profile -- --target src/DotNetBuildTool --configuration Debug build
