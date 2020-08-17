@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
-      - name: Restore & Restore tools
-        run: dotnet run --project src/DotNetBuildTool/src/DotNetBuildTool.Tool/ --configuration Release --no-launch-profile -- --target src/DotNetBuildTool --configuration Debug restore
-      - name: Build check
-        run: dotnet run --project src/DotNetBuildTool/src/DotNetBuildTool.Tool/ --configuration Release --no-launch-profile -- --target src/DotNetBuildTool --configuration Debug build
+      - name: Build Tool Info
+        run: dotnet run --project src/DotNetBuildTool/src/DotNetBuildTool.Tool/
+     
