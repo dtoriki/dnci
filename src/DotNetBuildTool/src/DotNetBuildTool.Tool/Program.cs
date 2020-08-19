@@ -32,6 +32,7 @@ namespace DotNetBuildTool.Tool
             bool errorIfToolConfigNotExists = false
             )
         {
+            //hello_its_me
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             _errorIfToolConfigNotExists = errorIfToolConfigNotExists;
             string enviroinmentVarsConfigPath = Path.Combine(Environment.CurrentDirectory, _enviroinmentVarsConfigFile);
