@@ -57,14 +57,16 @@ namespace DotNetBuildTool.Engine
                 async () =>
                 {
                     bool isPublicRelease = bool.Parse(Environment.GetEnvironmentVariable("NBGV_PublicRelease") ?? "false");
-                    BufferedCommandResult cmd = await Cli.Wrap(_dotnetPath).WithArguments($"msbuild {_options.FileOrFolder} -noLogo " +
+                    BufferedCommandResult cmd = await Cli.Wrap(_dotnetPath).WithArguments(
+                        $"msbuild {_options.FileOrFolder} -noLogo " +
                         "-t:Restore " +
                         "-p:RestoreForce=true " +
                         "-p:RestoreIgnoreFailedSources=True " +
                         $"-p:Configuration={_options.Configuration} " +
                         // for Nerdbank.GitVersioning
                         $"-p:PublicRelease={isPublicRelease} "
-                        ).ToConsole()
+                        )
+                        .ToConsole()
                         .ExecuteBufferedAsync(cancellationToken).Task.ConfigureAwait(false);
                 });
 
@@ -72,7 +74,9 @@ namespace DotNetBuildTool.Engine
                 "build",
                 async () =>
                 {
-                    BufferedCommandResult cmd = await Cli.Wrap(_dotnetPath).WithArguments($"build {_options} -noLogo -c {_options.Configuration}")
+                    BufferedCommandResult cmd = await Cli.Wrap(_dotnetPath).WithArguments(
+                        $"build {_options} -noLogo -c {_options.Configuration}"
+                        )
                         .ToConsole()
                         .ExecuteBufferedAsync(cancellationToken).Task.ConfigureAwait(false);
                 });
@@ -83,9 +87,12 @@ namespace DotNetBuildTool.Engine
                 {
                     string resultsDirectory = Path.GetFullPath(Path.Combine("artifacts", "tests", "unit", "output"));
                     if (!Directory.Exists(resultsDirectory))
+                    {
                         Directory.CreateDirectory(resultsDirectory);
+                    }
                     BufferedCommandResult cmd = await Cli.Wrap(_dotnetPath)
-                        .WithArguments($"test " +
+                        .WithArguments(
+                        $"test " +
                         "--filter FullyQualifiedName~Unit " +
                         "--nologo " +
                         "--no-restore " +
@@ -116,7 +123,9 @@ namespace DotNetBuildTool.Engine
                     // Removes guid from tests output path, workaround of https://github.com/microsoft/vstest/issues/2378
                     static void MoveAttachmentsToResultsDirectory(string resultsDirectory, string output)
                     {
-                        Regex attachmentsRegex = new Regex($@"Attachments:(?<filepaths>(?<filepath>[\s]+[^\n]+{Regex.Escape(resultsDirectory)}[^\n]+[\n])+)", RegexOptions.Singleline | RegexOptions.CultureInvariant);
+                        Regex attachmentsRegex = new Regex(
+                            $@"Attachments:(?<filepaths>(?<filepath>[\s]+[^\n]+{Regex.Escape(resultsDirectory)}[^\n]+[\n])+)",
+                            RegexOptions.Singleline | RegexOptions.CultureInvariant);
                         Match match = attachmentsRegex.Match(output);
                         if (match.Success)
                         {
@@ -144,19 +153,28 @@ namespace DotNetBuildTool.Engine
         {
             string dotnet = "dotnet";
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
                 dotnet += ".exe";
+            }
 
             ProcessModule mainModule = Process.GetCurrentProcess().MainModule;
-            if (!string.IsNullOrEmpty(mainModule?.FileName) && Path.GetFileName(mainModule.FileName)!.Equals(dotnet, StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(mainModule?.FileName)
+                && Path.GetFileName(mainModule.FileName)!.Equals(dotnet, StringComparison.OrdinalIgnoreCase))
+            {
                 return mainModule.FileName;
+            }
 
             string? environmentVariable = Environment.GetEnvironmentVariable("DOTNET_ROOT");
             if (!string.IsNullOrEmpty(environmentVariable))
+            {
                 return Path.Combine(environmentVariable, dotnet);
+            }
 
             string? paths = Environment.GetEnvironmentVariable("PATH");
             if (paths == null)
+            {
                 return null;
+            }
 
             foreach (string path in paths.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
             {

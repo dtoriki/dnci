@@ -5,15 +5,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Bullseye;
-
-using CliWrap.Buffered;
 using DotNetBuildTool.Engine;
-
 using static DotNetBuildTool.Config.EniroinmentConfig;
 using static DotNetBuildTool.Config.ToolConfig;
 
@@ -49,15 +43,15 @@ namespace DotNetBuildTool.Tool
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            const string ENV = "ENVIROINMENT VAR: ";
+            const string env = "ENVIROINMENT VAR: ";
             if (File.Exists(path))
             {
-                Console.WriteLine($"{ENV}File \"{path}\" found.\nSet enviroinment variables from {path} ->");
+                Console.WriteLine($"{env}File \"{path}\" found.\nSet enviroinment variables from {path} ->");
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine($"{ENV}Cant find \"{path}\" file.\nSet deffault enviroinment variables ->");
+                Console.WriteLine($"{env}Cant find \"{path}\" file.\nSet deffault enviroinment variables ->");
                 Console.ResetColor();
             }
 
@@ -65,30 +59,30 @@ namespace DotNetBuildTool.Tool
             {
                 Environment.SetEnvironmentVariable(item.Key, item.Value);
                 
-                Console.WriteLine($"    {ENV}\"{item.Key}\"=\"{item.Value}\"  -> Done.");
+                Console.WriteLine($"    {env}\"{item.Key}\"=\"{item.Value}\"  -> Done.");
             }
             stopWatch.Stop();
-            Console.WriteLine($"{ENV}Done. Elapsed time: {((float)stopWatch.ElapsedTicks / (float)Stopwatch.Frequency).ToString("0.0000")}s.");
+            Console.WriteLine($"{env}Done. Elapsed time: {((float)stopWatch.ElapsedTicks / (float)Stopwatch.Frequency).ToString("0.0000")}s.");
         }
 
         private static async Task<BuilderOptions> SetToolOptionsAsync(string path)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            const string TOOL = "TOOL OPTIONS: ";
+            const string tool = "TOOL OPTIONS: ";
 
             if (File.Exists(path))
             {
-                Console.WriteLine($"{TOOL}File \"{path}\" found.\nSet DotNetBuildTool options from {path} ->");
+                Console.WriteLine($"{tool}File \"{path}\" found.\nSet DotNetBuildTool options from {path} ->");
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine($"{TOOL}Cant find \"{path}\" file.\nSorry, command line arguments not Implement yet.");
+                Console.WriteLine($"{tool}Cant find \"{path}\" file.\nSorry, command line arguments not Implement yet.");
                 Console.ResetColor();
                 if (_errorIfToolConfigNotExists)
                 {
-                    throw new Exception($"{TOOL}Can't configure build tool.");
+                    throw new Exception($"{tool}Can't configure build tool.");
                 }
             }
             BuilderOptions result = new BuilderOptions();
@@ -100,7 +94,7 @@ namespace DotNetBuildTool.Tool
                 if (property == null)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.WriteLine($"    {TOOL}Can't find and set: \"{item.Key}\"  -> Done.");
+                    Console.WriteLine($"    {tool}Can't find and set: \"{item.Key}\"  -> Done.");
                     Console.ResetColor();
 
                 }
@@ -126,11 +120,11 @@ namespace DotNetBuildTool.Tool
                     {
                         throw new ArgumentException($"{item.Key} option can't be parsed", ex);
                     }
-                    Console.WriteLine($"    {TOOL}{item.Key} \"{item.Value}\"  -> Done.");
+                    Console.WriteLine($"    {tool}{item.Key} \"{item.Value}\"  -> Done.");
                 }
             }
             stopWatch.Stop();
-            Console.WriteLine($"{TOOL}Done. Elapsed time: {((float)stopWatch.ElapsedTicks / (float)Stopwatch.Frequency).ToString("0.0000")}s.");
+            Console.WriteLine($"{tool}Done. Elapsed time: {((float)stopWatch.ElapsedTicks / (float)Stopwatch.Frequency).ToString("0.0000")}s.");
             return result;
 
             bool ParseBool(string str)
@@ -148,158 +142,5 @@ namespace DotNetBuildTool.Tool
                 return Enum.Parse(enumType, str);
             }
         }
-
-        //string dotnet = TryFindDotNetExePath()
-        //   ?? throw new FileNotFoundException("'dotnet' command isn't found. Try to set DOTNET_ROOT variable.");
-
-        //if (info)
-        //{
-        //    Console.WriteLine(".Net Build Tool");
-        //}
-        //if ((arguments?.Count() ?? 0) == 0)
-        //{
-        //    Console.WriteLine("Can't find any targets for msbuild.");
-        //    return;
-        //}
-        //SetEnvVariables();
-
-        //var options = new Options
-        //{
-        //    Clear = clear,
-        //    DryRun = dryRun,
-        //    Host = host,
-        //    ListDependencies = listDependencies,
-        //    ListInputs = listInputs,
-        //    ListTargets = listTargets,
-        //    ListTree = listTree,
-        //    NoColor = noColor,
-        //    Parallel = parallel,
-        //    SkipDependencies = skipDependencies,
-        //    Verbose = verbose
-        //};
-
-        //Target(
-        //    "restore",
-        //    async () =>
-        //    {
-        //        bool isPublicRelease = bool.Parse(Environment.GetEnvironmentVariable("NBGV_PublicRelease") ?? "false");
-        //        BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"msbuild {target} -noLogo " +
-        //            "-t:Restore " +
-        //            "-p:RestoreForce=true " +
-        //            "-p:RestoreIgnoreFailedSources=True " +
-        //            $"-p:Configuration={configuration} " +
-        //            // for Nerdbank.GitVersioning
-        //            $"-p:PublicRelease={isPublicRelease} "
-        //            ).ToConsole()
-        //            .ExecuteBufferedAsync().Task.ConfigureAwait(false);
-        //    });
-
-        //Target(
-        //    "build",
-        //    async () =>
-        //    {
-        //        BufferedCommandResult cmd = await Cli.Wrap(dotnet).WithArguments($"build {target} -noLogo -c {configuration}")
-        //            .ToConsole()
-        //            .ExecuteBufferedAsync().Task.ConfigureAwait(false);
-        //    });
-
-        //Target(
-        //    "unit_test",
-        //    async () =>
-        //    {
-        //        string resultsDirectory = Path.GetFullPath(Path.Combine("artifacts", "tests", "unit", "output"));
-        //        if (!Directory.Exists(resultsDirectory))
-        //            Directory.CreateDirectory(resultsDirectory);
-        //        BufferedCommandResult cmd = await Cli.Wrap(dotnet)
-        //            .WithArguments($"test " +
-        //            "--filter FullyQualifiedName~Unit " +
-        //            "--nologo " +
-        //            "--no-restore " +
-        //            $"--collect:\"XPlat Code Coverage\" --results-directory {resultsDirectory} " +
-        //            $"--logger trx;LogFileName=\"{Path.Combine(resultsDirectory, "tests.trx").Replace("\"", "\\\"")}\" " +
-        //            $"-c {configuration} " +
-        //            "-- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=json,cobertura"
-        //            )
-        //            .ToConsole()
-        //            .ExecuteBufferedAsync().Task.ConfigureAwait(false);
-
-        //        MoveAttachmentsToResultsDirectory(resultsDirectory, cmd.StandardOutput);
-        //        TryRemoveTestsOutputDirectories(resultsDirectory);
-
-        //        // Removes all files in inner folders, workaround of https://github.com/microsoft/vstest/issues/2334
-        //        static void TryRemoveTestsOutputDirectories(string resultsDirectory)
-        //        {
-        //            foreach (string directory in Directory.EnumerateDirectories(resultsDirectory))
-        //            {
-        //                try
-        //                {
-        //                    Directory.Delete(directory, recursive: true);
-        //                }
-        //                catch { }
-        //            }
-        //        }
-
-        //        // Removes guid from tests output path, workaround of https://github.com/microsoft/vstest/issues/2378
-        //        static void MoveAttachmentsToResultsDirectory(string resultsDirectory, string output)
-        //        {
-        //            Regex attachmentsRegex = new Regex($@"Attachments:(?<filepaths>(?<filepath>[\s]+[^\n]+{Regex.Escape(resultsDirectory)}[^\n]+[\n])+)", RegexOptions.Singleline | RegexOptions.CultureInvariant);
-        //            Match match = attachmentsRegex.Match(output);
-        //            if (match.Success)
-        //            {
-        //                string regexPaths = match.Groups["filepaths"].Value.Trim('\n', ' ', '\t', '\r');
-        //                string[] paths = regexPaths.Split('\n', StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-        //                if (paths.Length > 0)
-        //                {
-        //                    foreach (string path in paths)
-        //                    {
-        //                        File.Move(path, Path.Combine(resultsDirectory, Path.GetFileName(path)), overwrite: true);
-        //                    }
-        //                    Directory.Delete(Path.GetDirectoryName(paths[0]), true);
-        //                }
-        //            }
-        //        }
-        //    });
-
-        //Target("default", DependsOn("build"));
-
-        //await RunTargetsAndExitAsync(arguments, options).ConfigureAwait(false);
-
-        //static void SetEnvVariables()
-        //{
-        //    Environment.SetEnvironmentVariable("DOTNET_CLI_TELEMETRY_OPTOUT", "1");
-        //    Environment.SetEnvironmentVariable("DOTNET_SVCUTIL_TELEMETRY_OPTOUT", "1");
-        //    Environment.SetEnvironmentVariable("DOTNET_SKIP_FIRST_TIME_EXPERIENCE", "1");
-        //    Environment.SetEnvironmentVariable("DOTNET_NOLOGO", "1");
-        //    Environment.SetEnvironmentVariable("POWERSHELL_TELEMETRY_OPTOUT", "1");
-        //    Environment.SetEnvironmentVariable("POWERSHELL_UPDATECHECK_OPTOUT", "1");
-        //    Environment.SetEnvironmentVariable("DOTNET_CLI_UI_LANGUAGE", "ru");
-        //}
-
-        //
-        //
-        //
-        //
-        //
-
-        //
-        //
-        //
-
-        //
-        //
-        //
-
-        //
-        //
-        //
-
-        //
-        //
-        //
-        //
-        //
-        //
-        //
-        //
     }
 }
