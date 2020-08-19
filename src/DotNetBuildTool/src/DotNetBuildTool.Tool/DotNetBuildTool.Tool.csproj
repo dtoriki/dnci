@@ -9,8 +9,6 @@
     <DependencyVersion>Highest</DependencyVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Bullseye" />
-    <PackageReference Include="CliWrap" />
     <PackageReference Include="System.CommandLine.DragonFruit" />
   </ItemGroup>
   <ItemGroup>
