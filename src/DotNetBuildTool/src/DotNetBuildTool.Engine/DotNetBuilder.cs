@@ -11,6 +11,8 @@ using Bullseye;
 using Bullseye.Internal;
 using CliWrap;
 using CliWrap.Buffered;
+using DotNetBuildTool.Engine.Builder;
+using DotNetBuildTool.Engine.Bullseye;
 using static Bullseye.Targets;
 
 namespace DotNetBuildTool.Engine
@@ -24,21 +26,22 @@ namespace DotNetBuildTool.Engine
 
         private DotNetBuilder(string? dotnetPath, CancellationToken cancellationToken = default)
         {
-            _options = options;
             _dotnetPath = dotnetPath ?? string.Empty;
             _cancellationToken = cancellationToken;
             _tasks = new List<IBuilderTask>();
         }
 
-        public static async Task<DotNetBuilder> CreatBuilderAsync(BuilderTaskOptions options, CancellationToken cancellationToken = default)
+        public static async Task<DotNetBuilder> CreatBuilderAsync(CancellationToken cancellationToken = default)
         {
-            return await Task.Run(async () => new DotNetBuilder(options, await TryFindDotNetExePath(), cancellationToken));
+            return await Task.Run(async () => new DotNetBuilder(await TryFindDotNetExePath(), cancellationToken));
         }
 
         public DotNetBuilder AddTask<TTask>(TTask task)
-            where TTask : IBuilderTask
+            where TTask : IBuilderTask, IBullseyeOptions
         {
-            _tasks.Contains(.Add(task);
+            _ = _tasks.Contains(task)
+                ? throw new Exception()
+                : _tasks.Add(task);
             return this;
             
         }
