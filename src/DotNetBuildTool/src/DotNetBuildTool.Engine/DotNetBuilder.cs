@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Bullseye;
+using Bullseye.Internal;
 using CliWrap;
 using CliWrap.Buffered;
 using static Bullseye.Targets;
@@ -16,19 +18,29 @@ namespace DotNetBuildTool.Engine
     public class DotNetBuilder
     {
         private readonly string _dotnetPath;
-        private readonly BuilderOptions _options;
+        private readonly CancellationToken _cancellationToken;
 
-        private DotNetBuilder(BuilderOptions options, string? dotnetPath, CancellationToken cancellationToken = default)
+        private IList<IBuilderTask> _tasks;
+
+        private DotNetBuilder(string? dotnetPath, CancellationToken cancellationToken = default)
         {
             _options = options;
             _dotnetPath = dotnetPath ?? string.Empty;
-
-            InitTargets(cancellationToken);
+            _cancellationToken = cancellationToken;
+            _tasks = new List<IBuilderTask>();
         }
 
-        public static DotNetBuilder CreatBuilderAsync(BuilderOptions options, CancellationToken cancellationToken = default)
+        public static async Task<DotNetBuilder> CreatBuilderAsync(BuilderTaskOptions options, CancellationToken cancellationToken = default)
         {
-            return new DotNetBuilder(options, TryFindDotNetExePath(), cancellationToken);
+            return await Task.Run(async () => new DotNetBuilder(options, await TryFindDotNetExePath(), cancellationToken));
+        }
+
+        public DotNetBuilder AddTask<TTask>(TTask task)
+            where TTask : IBuilderTask
+        {
+            _tasks.Contains(.Add(task);
+            return this;
+            
         }
 
         public async Task ExecuteTargetsAsync(string[] targets)
@@ -149,7 +161,7 @@ namespace DotNetBuildTool.Engine
             });
         }
 
-        private static string? TryFindDotNetExePath()
+        private static async Task<string?> TryFindDotNetExePath()
         {
             string dotnet = "dotnet";
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

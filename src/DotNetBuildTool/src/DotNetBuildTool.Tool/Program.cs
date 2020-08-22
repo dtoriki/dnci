@@ -30,10 +30,10 @@ namespace DotNetBuildTool.Tool
             _errorIfToolConfigNotExists = errorIfToolConfigNotExists;
             string enviroinmentVarsConfigPath = Path.Combine(Environment.CurrentDirectory, _enviroinmentVarsConfigFile);
             string buildToolConfigPath = Path.Combine(Environment.CurrentDirectory, _dotnetBuildToolConfig);
-            Task< BuilderOptions> setToolOptionsTask = SetToolOptionsAsync(buildToolConfigPath);
+            Task< BuilderTaskOptions> setToolOptionsTask = SetToolOptionsAsync(buildToolConfigPath);
             Task setEnvVarsTask = SetEnviroinmentVariablesAsync(enviroinmentVarsConfigPath);
 
-            BuilderOptions options = await setToolOptionsTask;
+            BuilderTaskOptions options = await setToolOptionsTask;
             await setEnvVarsTask;
 
             await DotNetBuilder.CreatBuilderAsync(options, cancellationToken).ExecuteTargetsAsync(arguments);         
@@ -65,7 +65,7 @@ namespace DotNetBuildTool.Tool
             Console.WriteLine($"{env}Done. Elapsed time: {((float)stopWatch.ElapsedTicks / (float)Stopwatch.Frequency).ToString("0.0000")}s.");
         }
 
-        private static async Task<BuilderOptions> SetToolOptionsAsync(string path)
+        private static async Task<BuilderTaskOptions> SetToolOptionsAsync(string path)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -85,10 +85,10 @@ namespace DotNetBuildTool.Tool
                     throw new Exception($"{tool}Can't configure build tool.");
                 }
             }
-            BuilderOptions result = new BuilderOptions();
+            BuilderTaskOptions result = new BuilderTaskOptions();
             await foreach (KeyValuePair<string, string> item in LoadToolConfig(path))
             {
-                PropertyInfo? property = typeof(BuilderOptions)
+                PropertyInfo? property = typeof(BuilderTaskOptions)
                     .GetProperties()
                     .FirstOrDefault(x => x.Name.ToUpper() == item.Key.ToUpper());
                 if (property == null)
