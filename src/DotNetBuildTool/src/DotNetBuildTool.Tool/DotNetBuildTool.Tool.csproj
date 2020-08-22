@@ -22,6 +22,8 @@
     <ProjectReference Include="..\DotNetBuildTool.Engine\DotNetBuildTool.Engine.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="SharpYaml" Version="1.6.6" />
+
     <PackageReference Update="Nerdbank.GitVersioning">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

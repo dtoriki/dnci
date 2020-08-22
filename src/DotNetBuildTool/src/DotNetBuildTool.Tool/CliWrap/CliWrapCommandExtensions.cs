@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using CliWrap;
 
-namespace DotNetBuildTool.Engine.CliWrap
+namespace DotNetBuildTool.Tool.CliWrap
 {
     internal static class CliWrapCommandExtensions
     {

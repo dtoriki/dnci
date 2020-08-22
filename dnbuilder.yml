@@ -1,0 +1,16 @@
+envvars:
+  - "DOTNET_CLI_TELEMETRY_OPTOUT 1"
+  - "DOTNET_SVCUTIL_TELEMETRY_OPTOUT 1"
+  - "DOTNET_SKIP_FIRST_TIME_EXPERIENCE 1"
+  - "DOTNET_NOLOGO 1"
+  - "POWERSHELL_TELEMETRY_OPTOUT 1"
+  - "POWERSHELL_UPDATECHECK_OPTOUT 1"
+  - "DOTNET_CLI_UI_LANGUAGE ru"
+tasks:
+  task:
+    description: Build
+    definitions:
+      - src/DotNetBuildTool
+    jobs:
+      build:
+      - depends: restore

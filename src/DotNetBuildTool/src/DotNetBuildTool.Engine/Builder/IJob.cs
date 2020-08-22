@@ -7,7 +7,6 @@ namespace DotNetBuildTool.Engine.Builder
     public interface IJob
     {
         string Name { get; }
-        IEnumerable<string> Depends { get; }
-        Func<Task> Action { get; }
+        Func<Task> JobAction { get; }
     }
 }
