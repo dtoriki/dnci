@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace DotNetBuildTool.Config
+namespace DotNetCI.Config
 {
     public static class ToolConfig
     {

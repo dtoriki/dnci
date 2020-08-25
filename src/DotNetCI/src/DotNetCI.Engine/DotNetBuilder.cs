@@ -11,7 +11,7 @@ using CliWrap;
 using CliWrap.Buffered;
 using static Bullseye.Targets;
 
-namespace DotNetBuildTool.Engine
+namespace DotNetCI.Engine
 {
     public class DotNetBuilder
     {

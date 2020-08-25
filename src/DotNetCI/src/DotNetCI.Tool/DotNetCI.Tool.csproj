@@ -18,8 +18,8 @@
     <None Remove="Directory.Build.props" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DotNetBuildTool.Config\DotNetBuildTool.Config.csproj" />
-    <ProjectReference Include="..\DotNetBuildTool.Engine\DotNetBuildTool.Engine.csproj" />
+    <ProjectReference Include="..\DotNetCI.Config\DotNetCI.Config.csproj" />
+    <ProjectReference Include="..\DotNetCI.Engine\DotNetCI.Engine.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Nerdbank.GitVersioning">

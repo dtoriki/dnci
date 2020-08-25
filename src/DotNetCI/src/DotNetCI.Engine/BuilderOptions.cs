@@ -1,6 +1,6 @@
 using Bullseye;
 
-namespace DotNetBuildTool.Engine
+namespace DotNetCI.Engine
 {
     public class BuilderOptions
     {

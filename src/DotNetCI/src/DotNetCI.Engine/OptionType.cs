@@ -1,4 +1,4 @@
-namespace DotNetBuildTool.Engine
+namespace DotNetCI.Engine
 {
     public enum OptionType
     {
