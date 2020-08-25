@@ -3,7 +3,7 @@
     <SolutionDir Condition="'$(SolutionDir)' == ''">$(MSBuildThisFileDirectory.TrimEnd('\').TrimEnd('/'))\</SolutionDir>
     <NoLogo>true</NoLogo>
     <Authors>Mikhail Loskutov</Authors>
-    <Description>DotNetBuildTool</Description>
+    <Description>DotNetCI</Description>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <DefaultLanguage>ru-RU</DefaultLanguage>

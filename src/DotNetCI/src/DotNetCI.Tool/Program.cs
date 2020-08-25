@@ -7,11 +7,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using DotNetBuildTool.Engine;
-using static DotNetBuildTool.Config.EniroinmentConfig;
-using static DotNetBuildTool.Config.ToolConfig;
+using DotNetCI.Engine;
+using static DotNetCI.Config.EniroinmentConfig;
+using static DotNetCI.Config.ToolConfig;
 
-namespace DotNetBuildTool.Tool
+namespace DotNetCI.Tool
 {
     internal static class Program
     {

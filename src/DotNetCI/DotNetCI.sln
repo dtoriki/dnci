@@ -14,16 +14,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{16DED6D7-9309-4A88-B499-39A6C8AE33A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetBuildTool.Tool", "src\DotNetBuildTool.Tool\DotNetBuildTool.Tool.csproj", "{7FB37246-993B-4EF1-AAC9-12F3DFB7D1FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCI.Tool", "src\DotNetCI.Tool\DotNetCI.Tool.csproj", "{7FB37246-993B-4EF1-AAC9-12F3DFB7D1FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{A9343D80-0366-4BEC-B637-2E6BCD66252F}"
 	ProjectSection(SolutionItems) = preProject
 		src\Directory.Build.props = src\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetBuildTool.Engine", "src\DotNetBuildTool.Engine\DotNetBuildTool.Engine.csproj", "{0CE9842E-C869-4AFC-85B8-34C55FDEDD26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCI.Engine", "src\DotNetCI.Engine\DotNetCI.Engine.csproj", "{0CE9842E-C869-4AFC-85B8-34C55FDEDD26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetBuildTool.Config", "src\DotNetBuildTool.Config\DotNetBuildTool.Config.csproj", "{11C6B3A4-E3DB-4F79-AF24-728A188519E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCI.Config", "src\DotNetCI.Config\DotNetCI.Config.csproj", "{11C6B3A4-E3DB-4F79-AF24-728A188519E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
