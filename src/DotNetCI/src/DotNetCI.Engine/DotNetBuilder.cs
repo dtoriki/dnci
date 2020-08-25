@@ -26,9 +26,9 @@ namespace DotNetCI.Engine
             InitTargets(cancellationToken);
         }
 
-        public static DotNetBuilder CreatBuilderAsync(BuilderOptions options, CancellationToken cancellationToken = default)
+        public static async Task<DotNetBuilder> CreatBuilderAsync(BuilderOptions options, CancellationToken cancellationToken = default)
         {
-            return new DotNetBuilder(options, TryFindDotNetExePath(), cancellationToken);
+            return new DotNetBuilder(options, await TryFindDotNetPathAsync(), cancellationToken);
         }
 
         public async Task ExecuteTargetsAsync(string[] targets)
@@ -149,7 +149,7 @@ namespace DotNetCI.Engine
             });
         }
 
-        private static string? TryFindDotNetExePath()
+        private static string? TryFindDotNetPath()
         {
             string dotnet = "dotnet";
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -185,6 +185,11 @@ namespace DotNetCI.Engine
                 }
             }
             return null;
+        }
+
+        private static async Task<string?> TryFindDotNetPathAsync()
+        {
+            return await Task.Run(() => TryFindDotNetPath());
         }
     }
 }
