@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DotNetCI.Config\DotNetCI.Config.csproj" />
     <ProjectReference Include="..\DotNetCI.Engine\DotNetCI.Engine.csproj" />
+    <ProjectReference Include="..\DotNetCI.Extensions\DotNetCI.Extensions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Nerdbank.GitVersioning">

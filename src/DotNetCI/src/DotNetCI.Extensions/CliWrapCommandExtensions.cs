@@ -2,13 +2,13 @@ using System;
 using System.IO;
 using CliWrap;
 
-namespace DotNetCI.Engine
+namespace DotNetCI.Extensions
 {
-    internal static class CliWrapCommandExtensions
+    public static class CliWrapCommandExtensions
     {
         internal static Stream _stdout = Console.OpenStandardOutput();
         internal static Stream _stderr = Console.OpenStandardOutput();
 
-        internal static Command ToConsole(this Command command) => command | (_stdout, _stderr);
+        public static Command ToConsole(this Command command) => command | (_stdout, _stderr);
     }
 }

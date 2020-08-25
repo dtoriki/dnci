@@ -4,10 +4,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Bullseye" />
     <PackageReference Include="CliWrap" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DotNetCI.Config\DotNetCI.Config.csproj" />
   </ItemGroup>
 </Project>
