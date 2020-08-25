@@ -36,7 +36,8 @@ namespace DotNetCI.Tool
             BuilderOptions options = await setToolOptionsTask;
             await setEnvVarsTask;
 
-            await DotNetBuilder.CreatBuilderAsync(options, cancellationToken).ExecuteTargetsAsync(arguments);         
+            DotNetBuilder builder = await DotNetBuilder.CreatBuilderAsync(options, cancellationToken);
+            await builder.ExecuteTargetsAsync(arguments);         
         }
 
         private static async Task SetEnviroinmentVariablesAsync(string path)
