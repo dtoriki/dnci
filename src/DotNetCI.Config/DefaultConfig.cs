@@ -18,7 +18,7 @@ namespace DotNetCI.Config
         public static RunOptions RunOptions => new RunOptions
         {
             Host = Host.Unknown,
-            Verbose = true,
+            Verbose = false,
             SkipDependencies = false,
             Parallel = false,
             NoColor = false,

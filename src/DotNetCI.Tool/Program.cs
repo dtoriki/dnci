@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using DotNetCI.Config;
+using DotNetCI.Engine;
+using DotNetCI.Tool.CiJobs;
 
 namespace DotNetCI.Tool
 {
 
     internal static class Program
     {
-
         private static readonly string _configFile = "dnci.yml";
+        
+        private static string? _dotnetPath;
+        private static CancellationToken _cancellationToken;
 
         private static async Task<int> Main(
             string[] arguments,
@@ -21,6 +26,7 @@ namespace DotNetCI.Tool
             )
         {
             Environment.SetEnvironmentVariable("DOTNET_CLI_TELEMETRY_OPTOUT", "1");
+            _cancellationToken = cancellationToken;
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             string configFilePath = Path.Combine(Environment.CurrentDirectory, _configFile);
             Console.WriteLine($"Try find {_configFile}\n");
@@ -33,9 +39,18 @@ namespace DotNetCI.Tool
             Stopwatch stopWatch = new Stopwatch();
             try
             {
+                _dotnetPath = await TryFindDotNetPathAsync(stopWatch);
+                if (string.IsNullOrEmpty(_dotnetPath))
+                {
+                    throw new FileNotFoundException("Can't find dotnet execution file.");
+                }
                 CIConfigRepository configRepository = await ReadConfigFileAsync(configFilePath, stopWatch);
-                stopWatch.Reset();
                 SetEnviroinmentVariables(configRepository.Variables, stopWatch);
+
+                DotNetBuilder dotnetBuilder = new DotNetBuilder(configRepository.Options);
+                dotnetBuilder.AddCiTaskRange(GetTasks(configRepository.Tasks));
+                await dotnetBuilder.ExecuteTargetsAsync();
+
             }
             catch (Exception ex)
             {
@@ -71,6 +86,7 @@ namespace DotNetCI.Tool
             CIConfigRepository configRepository = await CIConfigRepository.CreateAsync(configFilePath, true);
             stopwatch.Stop();
             Console.WriteLine(GetElapsedTimeMessage(stopwatch));
+            stopwatch.Reset();
 
             return configRepository;
         }
@@ -93,6 +109,77 @@ namespace DotNetCI.Tool
             return $"Done! Elapsed time: {(float)stopwatch.ElapsedTicks / (float)Stopwatch.Frequency}\n";
         }
 
+        private static IEnumerable<ICiTask> GetTasks(IEnumerable<CITaskConfig> tasksConfig)
+        {
+            List<ICiTask> result = new List<ICiTask>();
+            foreach (CITaskConfig taskConfig in tasksConfig)
+            {
+                ICiTask ciTask = new CiTask(taskConfig.Name, taskConfig.Description);
+                foreach (CIJobConfig jobConfig in taskConfig.Jobs)
+                {
+                    ICiJob newJob = jobConfig.Name switch
+                    {
+                        "restore" => new ResotoreJob(_dotnetPath, taskConfig.Definitions, jobConfig.Configuration, _cancellationToken),
+                        _ => new DefaultJob()
+                    };
+
+                    ciTask.AddJob(newJob);
+                }
+
+                result.Add(ciTask);
+            }
+
+            return result;
+        }
+
+        private static string? TryFindDotNetPath()
+        {
+            string dotnet = "dotnet";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                dotnet += ".exe";
+            }
+
+            ProcessModule mainModule = Process.GetCurrentProcess().MainModule;
+            if (!string.IsNullOrEmpty(mainModule?.FileName)
+                && Path.GetFileName(mainModule.FileName)!.Equals(dotnet, StringComparison.OrdinalIgnoreCase))
+            {
+                return mainModule.FileName;
+            }
+
+            string? environmentVariable = Environment.GetEnvironmentVariable("DOTNET_ROOT");
+            if (!string.IsNullOrEmpty(environmentVariable))
+            {
+                return Path.Combine(environmentVariable, dotnet);
+            }
+
+            string? paths = Environment.GetEnvironmentVariable("PATH");
+            if (paths == null)
+            {
+                return null;
+            }
+
+            foreach (string path in paths.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string fullPath = Path.Combine(path, dotnet);
+                if (File.Exists(fullPath))
+                {
+                    return fullPath;
+                }
+            }
+            return null;
+        }
+
+        private static async Task<string?> TryFindDotNetPathAsync(Stopwatch stopwatch)
+        {
+            Console.Write("Try find dotnet path ...");
+            stopwatch.Start();
+            string? dotnetPath = await Task.Run(() => TryFindDotNetPath());
+            stopwatch.Stop();
+            Console.WriteLine(GetElapsedTimeMessage(stopwatch));
+            stopwatch.Reset();
+            return dotnetPath;
+        }
 
         //private static async Task SetEnviroinmentVariablesAsync(string path)
         //{
@@ -199,46 +286,3 @@ namespace DotNetCI.Tool
         //}
     }
 }
-
-//private static string? TryFindDotNetPath()
-//{
-//    string dotnet = "dotnet";
-//    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-//    {
-//        dotnet += ".exe";
-//    }
-
-//    ProcessModule mainModule = Process.GetCurrentProcess().MainModule;
-//    if (!string.IsNullOrEmpty(mainModule?.FileName)
-//        && Path.GetFileName(mainModule.FileName)!.Equals(dotnet, StringComparison.OrdinalIgnoreCase))
-//    {
-//        return mainModule.FileName;
-//    }
-
-//    string? environmentVariable = Environment.GetEnvironmentVariable("DOTNET_ROOT");
-//    if (!string.IsNullOrEmpty(environmentVariable))
-//    {
-//        return Path.Combine(environmentVariable, dotnet);
-//    }
-
-//    string? paths = Environment.GetEnvironmentVariable("PATH");
-//    if (paths == null)
-//    {
-//        return null;
-//    }
-
-//    foreach (string path in paths.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
-//    {
-//        string fullPath = Path.Combine(path, dotnet);
-//        if (File.Exists(fullPath))
-//        {
-//            return fullPath;
-//        }
-//    }
-//    return null;
-//}
-
-//private static async Task<string?> TryFindDotNetPathAsync()
-//{
-//    return await Task.Run(() => TryFindDotNetPath());
-//}

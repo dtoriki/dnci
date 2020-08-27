@@ -8,7 +8,16 @@ variables:
   - DOTNET_CLI_UI_LANGUAGE ru
 tasks:
   - name: Hello! It's me!
+    definitions:
+      - src/DotNetCI/
     jobs:
-      - name: default
+      - name: restore
+        configuration: Release
+  - name: Hello! It's me2!
+    definitions:
+      - src/DotNetCI/src/DotNetCI.Config
+      - src/DotNetCI/src/DotNetCI.Engine
+    jobs:
+      - name: restore
       - configuration: Release
       

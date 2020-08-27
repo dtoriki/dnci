@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotNetCI.Engine
 {
@@ -8,6 +9,8 @@ namespace DotNetCI.Engine
         private readonly ICollection<ICiJob> _jobs;
 
         public int Count => _jobs.Count;
+
+        public ICiJob? this[string name] => _jobs.FirstOrDefault(x => x.Name == name);
 
         public JobsCollection()
         {

@@ -5,7 +5,7 @@ namespace DotNetCI.Engine
     public interface ICiTask
     {
         string Name { get; }
-        string Descrioption { get; }
+        string Description { get; }
         JobsCollection Jobs { get; }
 
         ICiTask AddJob<TJob>(TJob job)

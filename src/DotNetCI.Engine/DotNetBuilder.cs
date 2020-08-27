@@ -24,6 +24,17 @@ namespace DotNetCI.Engine
             return this;
         }
 
+        public DotNetBuilder AddCiTaskRange<TCiTask>(IEnumerable<TCiTask> tasks)
+            where TCiTask : ICiTask
+        {
+            foreach (TCiTask task in tasks)
+            {
+                _ = AddCiTask(task);
+            }
+
+            return this;
+        }
+
         public async Task ExecuteTargetsAsync()
         {
             List<ConfiguredTaskAwaitable> runTargetsTasks = new List<ConfiguredTaskAwaitable>();
