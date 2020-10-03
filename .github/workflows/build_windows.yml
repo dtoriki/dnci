@@ -25,5 +25,5 @@ jobs:
         with:
           dotnet-version: 3.1.301
       - name: Build Tool Info
-        run: dotnet run --project src/DotNetCI/src/DotNetCI.Tool/
+        run: dotnet run --project src/DotNetCI.Tool/
      
