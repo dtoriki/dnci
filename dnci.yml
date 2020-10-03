@@ -15,8 +15,8 @@ tasks:
         configuration: Release
   - name: Hello! It's me2!
     definitions:
-      - src/DotNetCI/src/DotNetCI.Config
-      - src/DotNetCI/src/DotNetCI.Engine
+      - src/DotNetCI.Config
+      - src/DotNetCI.Engine
     jobs:
       - name: restore
       - configuration: Release
