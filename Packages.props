@@ -6,6 +6,7 @@
   <ItemGroup Label="nupkg Versions">
     <PackageReference Update="CliWrap" Version="3.1.0" />
     <PackageReference Update="Bullseye" Version="3.4.0" />
+    <PackageReference Update="SharpYaml" Version="1.6.6" />
     <PackageReference Update="System.CommandLine.DragonFruit" Version="0.3.0-alpha.20303.1" />
 
     <PackageReference Update="Nerdbank.GitVersioning"  Version="3.2.31" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers" />

@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCI.Engine", "src\DotN
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCI.Config", "src\DotNetCI.Config\DotNetCI.Config.csproj", "{11C6B3A4-E3DB-4F79-AF24-728A188519E2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNetCI.Extensions", "src\DotNetCI.Extensions\DotNetCI.Extensions.csproj", "{C4D2280C-F5ED-4D54-AEA5-42D3FDC5382D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{11C6B3A4-E3DB-4F79-AF24-728A188519E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11C6B3A4-E3DB-4F79-AF24-728A188519E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11C6B3A4-E3DB-4F79-AF24-728A188519E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4D2280C-F5ED-4D54-AEA5-42D3FDC5382D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4D2280C-F5ED-4D54-AEA5-42D3FDC5382D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4D2280C-F5ED-4D54-AEA5-42D3FDC5382D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4D2280C-F5ED-4D54-AEA5-42D3FDC5382D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +58,7 @@ Global
 		{A9343D80-0366-4BEC-B637-2E6BCD66252F} = {16DED6D7-9309-4A88-B499-39A6C8AE33A6}
 		{0CE9842E-C869-4AFC-85B8-34C55FDEDD26} = {16DED6D7-9309-4A88-B499-39A6C8AE33A6}
 		{11C6B3A4-E3DB-4F79-AF24-728A188519E2} = {16DED6D7-9309-4A88-B499-39A6C8AE33A6}
+		{C4D2280C-F5ED-4D54-AEA5-42D3FDC5382D} = {16DED6D7-9309-4A88-B499-39A6C8AE33A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0DCA34AB-D2D4-419E-815F-82AAE2B03C45}

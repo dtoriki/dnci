@@ -7,4 +7,7 @@
     <PackageReference Include="Bullseye" />
     <PackageReference Include="CliWrap" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetCI.Config\DotNetCI.Config.csproj" />
+  </ItemGroup>
 </Project>

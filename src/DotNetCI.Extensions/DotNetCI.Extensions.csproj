@@ -3,5 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
+  <ItemGroup>
+    <PackageReference Include="CliWrap" />
+  </ItemGroup>
 </Project>
